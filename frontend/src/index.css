@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body{
-    background: linear-gradient(to bottom right, rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("../public/2877460.png");
+    background: linear-gradient(to bottom right, rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("/2877460.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
