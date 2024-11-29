@@ -10,37 +10,27 @@ import Spinner from "../components/Spinner";
 function HomePage() {
   const [userProfile, setUserProfile] = useState(null);  // Store user profile data
   const [repos, setRepos] = useState([]);  // Store user's repositories
-  const [loading, setloading] = useState(false);  // Loading state for data fetching
+  const [loading, setLoading] = useState(false);  // Loading state for data fetching
   const [sortType, setSortType] = useState("recent");  // Store current sort type
 
   // Fetch user profile and repos from GitHub API
   const getUserProfileAndRepos = useCallback(
     async (username = "Guna1301") => {  // Default username if none provided
-      setloading(true);  // Show loading spinner
+      setLoading(true);  // Show loading spinner
       try {
-        // Fetch user profile
-        const useRes = await fetch(`https://api.github.com/users/${username}`,{
-          headers:{
-            authorization:`token ${import.meta.env.VITE_GITHUB_API_KEY}`
-
-          }
-        });
-        const userProfile = await useRes.json();
-        setUserProfile(userProfile);  // Update profile state
-
-        // Fetch user repositories
-        const repoRes = await fetch(userProfile.repos_url);
-        const repos = await repoRes.json();
-        repos.sort((a,b)=> new Date(b.created_at)-new Date(a.created_at))
-        setRepos(repos);  // Update repos state
-        console.log(userProfile);
-
-        return { userProfile, repos };  // Return fetched data
-
+        const res = await fetch(`http://localhost:5000/api/users/profile/${username}`);
+        const { repos, userProfile } = await res.json();
+  
+        repos.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); //descending, recent first
+  
+        setRepos(repos);
+        setUserProfile(userProfile);
+  
+        return { userProfile, repos };
       } catch (error) {
-        toast.error(error.message);  // Show error message if fetch fails
+        toast.error(error.message);
       } finally {
-        setloading(false);  // Hide loading spinner
+        setLoading(false);
       }
     }, []
   );
@@ -54,7 +44,7 @@ function HomePage() {
   const onSearch = async (e, username) => {
     e.preventDefault();  // Prevent page refresh
 
-    setloading(true);  // Show loading spinner
+    setLoading(true);  // Show loading spinner
     setRepos([]);  // Clear repos
     setUserProfile(null);  // Clear user profile
 
@@ -63,7 +53,7 @@ function HomePage() {
 
     setUserProfile(userProfile);  // Update profile state
     setRepos(repos);  // Update repos state
-    setloading(false);  // Hide loading spinner
+    setLoading(false);  // Hide loading spinner
     setSortType("recent")
   };
 
