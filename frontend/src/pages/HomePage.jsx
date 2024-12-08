@@ -15,7 +15,7 @@ function HomePage() {
 
   // Fetch user profile and repos from GitHub API
   const getUserProfileAndRepos = useCallback(
-    async (username = "Guna1301") => {  // Default username if none provided
+    async (username = "github") => {  // Default username if none provided
       setLoading(true);  // Show loading spinner
       try {
         const res = await fetch(`/api/users/profile/${username}`);
